@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
+  - component: {fileID: 519420030}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -147,6 +148,29 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_Enabled: 1
+--- !u!114 &519420030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f0eaf1c574d9fd4aa3c1aa1973e8dcc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showMain: 1
+  showSub: 0
+  gridSizeX: 64
+  gridSizeY: 48
+  startX: -0.5
+  startY: -0.5
+  startZ: 0
+  smallStep: 1
+  largeStep: 8
+  mainColor: {r: 0, g: 1, b: 0, a: 1}
+  subColor: {r: 0, g: 0.5, b: 0, a: 1}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -233,6 +257,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22b3e77a66fd8c743adf91487b22d1ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0.01
+  mapSizeX: 32
+  mapSizeY: 24
 --- !u!4 &957652175
 Transform:
   m_ObjectHideFlags: 0

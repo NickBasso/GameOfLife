@@ -7,16 +7,26 @@ public class Game : MonoBehaviour
     // 1 unit is set to 16px
     private static int SCREEN_WIDTH = 64;   //64 units = 1024px
     private static int SCREEN_HEIGHT = 48;  //48 units = 768px
+
+    // hold user defined map size
+    private int fromX = 0;
+    private int fromY = 0;
+    private int toX = SCREEN_WIDTH;
+    private int toY = SCREEN_HEIGHT;
+
     private float timer = 0;
 
     public float speed = 0.1f;
+    public int mapSizeX = SCREEN_WIDTH;
+    public int mapSizeY = SCREEN_HEIGHT;
 
     Cell[,] grid = new Cell[SCREEN_WIDTH, SCREEN_HEIGHT];
 
     // Start is called before the first frame update
     void Start()
     {
-        PlaceCells();
+        establishMapSize();
+        fillCells();
     }
 
     // Update is called once per frame
@@ -37,9 +47,9 @@ public class Game : MonoBehaviour
 
     void PopulationControl()
     {
-        for(int y = 0; y < SCREEN_HEIGHT; y++)
+        for(int y = fromY; y < toY; y++)
         {
-            for(int x = 0; x < SCREEN_WIDTH; x++)
+            for(int x = fromX; x < toX; x++)
             {
                 /*
                     Conway's Game of Life rules:
@@ -48,7 +58,12 @@ public class Game : MonoBehaviour
                     3. others => die or remain dead
                 */
 
-                if(grid[x,y].isAlive)
+                // if oustide of bounds, set alive "outside of bounds" cells to see the bounds
+                if(y < fromY || y >= toY || x < fromX || x >= toX) 
+                {
+                    grid[x, y].SetAlive(true);
+                }
+                else if(grid[x,y].isAlive)
                 {
                     if(grid[x,y].numNeighbors != 2 && grid[x,y].numNeighbors != 3)
                     {
@@ -68,14 +83,14 @@ public class Game : MonoBehaviour
 
     void CountNeighbors()
     {
-        for(int y = 0; y < SCREEN_HEIGHT; y++)
+        for(int y = fromY; y < toY; y++)
         {
-            for(int x = 0; x < SCREEN_WIDTH; x++)
+            for(int x = fromX; x < toX; x++)
             {
                 int numNeighbors = 0;
 
                 // North
-                if(y+1 < SCREEN_HEIGHT)
+                if(y+1 < toY)
                 {
                     if(grid[x, y+1].isAlive){
                         numNeighbors++;
@@ -83,7 +98,7 @@ public class Game : MonoBehaviour
                 }
 
                 // East
-                if(x+1 < SCREEN_WIDTH)
+                if(x+1 < toX)
                 {
                     if(grid[x+1, y].isAlive){
                         numNeighbors++;
@@ -91,7 +106,7 @@ public class Game : MonoBehaviour
                 }
 
                 // South
-                if(y-1 >= 0)
+                if(y-1 >= fromY)
                 {
                     if(grid[x, y-1].isAlive)
                     {
@@ -100,7 +115,7 @@ public class Game : MonoBehaviour
                 }
 
                 // West
-                if(x-1 >= 0)
+                if(x-1 >= fromX)
                 {
                     if(grid[x-1, y].isAlive)
                     {
@@ -109,7 +124,7 @@ public class Game : MonoBehaviour
                 }
 
                 // NorthEast
-                if(x+1 < SCREEN_WIDTH && y+1 < SCREEN_HEIGHT)
+                if(x+1 < toX && y+1 < toY)
                 {
                     if(grid[x+1, y+1].isAlive){
                         numNeighbors++;
@@ -117,7 +132,7 @@ public class Game : MonoBehaviour
                 }
 
                 // NorthWest
-                if(x-1 >= 0 && y+1 < SCREEN_HEIGHT)
+                if(x-1 >= fromX && y+1 < toY)
                 {
                     if(grid[x-1, y+1].isAlive){
                         numNeighbors++;
@@ -125,7 +140,7 @@ public class Game : MonoBehaviour
                 }
 
                 // SouthEast
-                if(x+1 < SCREEN_WIDTH && y-1 >= 0)
+                if(x+1 < toX && y-1 >= fromY)
                 {
                     if(grid[x+1, y-1].isAlive)
                     {
@@ -134,7 +149,7 @@ public class Game : MonoBehaviour
                 }
 
                 // SouthWest
-                if(x-1 >= 0 && y-1 >= 0)
+                if(x-1 >= fromX && y-1 >= fromY)
                 {
                     if(grid[x-1, y-1].isAlive)
                     {
@@ -147,13 +162,14 @@ public class Game : MonoBehaviour
         }
     }
 
-    void PlaceCells()
+    void fillCells()
     {
-        for(int y = 0; y < SCREEN_HEIGHT; y++)
+        // fill the valid map cells with random beginning state
+        for(int y = fromY; y < toY; y++)
         {
-            for(int x = 0; x < SCREEN_WIDTH; x++)
+            for(int x = fromX; x < toX; x++)
             {
-                Cell cell = Instantiate(Resources.Load("Prefabs/Cell", typeof(Cell)), new Vector2(x,y), Quaternion.identity) as Cell;
+                Cell cell = Instantiate(Resources.Load("Prefabs/LiveCell", typeof(Cell)), new Vector2(x,y), Quaternion.identity) as Cell;
                 grid[x, y] = cell;
 
                 // fill the grid with a random state (alive or dead)
@@ -170,5 +186,13 @@ public class Game : MonoBehaviour
             return true;
         
         return false;
+    }
+
+    void establishMapSize() 
+    {
+        fromX = (SCREEN_WIDTH - mapSizeX) / 2;
+        toX = fromX + mapSizeX;
+        fromY = (SCREEN_HEIGHT - mapSizeY) / 2;
+        toY = fromY + mapSizeY;
     }
 }
