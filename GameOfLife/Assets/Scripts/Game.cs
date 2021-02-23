@@ -16,33 +16,40 @@ public class Game : MonoBehaviour
 
     private float timer = 0;
 
-    public float speed = 0.1f;
+    public float speed = 0.5f;
     public int mapSizeX = SCREEN_WIDTH;
     public int mapSizeY = SCREEN_HEIGHT;
+
+    public bool simulationEnabled = false;
 
     Cell[,] grid = new Cell[SCREEN_WIDTH, SCREEN_HEIGHT];
 
     // Start is called before the first frame update
     void Start()
     {
-        establishMapSize();
-        fillCells();
+        EstablishMapSize();
+        FillCells();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(timer >= speed)
+        if(simulationEnabled)
         {
-            timer = 0f;
+            if(timer >= speed)
+            {
+                timer = 0f;
 
-            CountNeighbors();
-            PopulationControl();
+                CountNeighbors();
+                PopulationControl();
+            }
+            else
+            {
+                timer += Time.deltaTime;
+            }
         }
-        else
-        {
-            timer += Time.deltaTime;
-        }
+
+        UserInput();
     }
 
     void PopulationControl()
@@ -162,7 +169,7 @@ public class Game : MonoBehaviour
         }
     }
 
-    void fillCells()
+    void FillCells()
     {
         // fill the valid map cells with random beginning state
         for(int y = fromY; y < toY; y++)
@@ -173,8 +180,38 @@ public class Game : MonoBehaviour
                 grid[x, y] = cell;
 
                 // fill the grid with a random state (alive or dead)
-                grid[x, y].SetAlive(RandomAliveCell());
+                // grid[x, y].SetAlive(RandomAliveCell());
+
+                grid[x, y].SetAlive(false);
             }
+        }
+    }
+
+    void UserInput()
+    {
+        if(Input.GetMouseButtonDown(0))
+        {
+            Vector2 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            int x = Mathf.RoundToInt(mousePoint.x);
+            int y = Mathf.RoundToInt(mousePoint.y);
+        
+            if(x >= fromX && y >= fromY && x < toX && y < toY)
+            {
+                grid[x, y].SetAlive(!grid[x, y].isAlive);
+            }
+        }
+
+        if(Input.GetKeyUp(KeyCode.P))
+        {
+            // Pause simulation
+            simulationEnabled = false;
+        }
+
+        if(Input.GetKeyUp(KeyCode.B))
+        {
+            // Resume simulation
+            simulationEnabled = true;
         }
     }
 
@@ -188,7 +225,7 @@ public class Game : MonoBehaviour
         return false;
     }
 
-    void establishMapSize() 
+    void EstablishMapSize() 
     {
         fromX = (SCREEN_WIDTH - mapSizeX) / 2;
         toX = fromX + mapSizeX;

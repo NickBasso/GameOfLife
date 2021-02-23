@@ -161,7 +161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showMain: 1
-  showSub: 0
+  showSub: 1
   gridSizeX: 64
   gridSizeY: 48
   startX: -0.5
@@ -257,9 +257,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22b3e77a66fd8c743adf91487b22d1ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.01
-  mapSizeX: 32
-  mapSizeY: 24
+  speed: 0
+  mapSizeX: 64
+  mapSizeY: 48
+  simulationEnabled: 1
 --- !u!4 &957652175
 Transform:
   m_ObjectHideFlags: 0
