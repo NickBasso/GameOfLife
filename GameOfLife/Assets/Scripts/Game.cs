@@ -205,13 +205,7 @@ public class Game : MonoBehaviour
         if(Input.GetKeyUp(KeyCode.P))
         {
             // Pause simulation
-            simulationEnabled = false;
-        }
-
-        if(Input.GetKeyUp(KeyCode.B))
-        {
-            // Resume simulation
-            simulationEnabled = true;
+            simulationEnabled = !simulationEnabled;
         }
     }
 
