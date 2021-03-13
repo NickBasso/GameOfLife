@@ -10,3 +10,4 @@
 - Press C to clear the entire map;
 - Press R to fill the entire map with random state cells;
 - Press P to Pause/Resume the game;
+- Click on cell to change its life status to the opposite (live/dead);
