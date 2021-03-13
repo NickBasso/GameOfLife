@@ -2,89 +2,90 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridOverlay : MonoBehaviour
-{
+public class GridOverlay: MonoBehaviour {
     private Material lineMaterial;
 
     public bool showMain = true;
     public bool showSub = false;
-    public int gridSizeX = 64;
-    public int gridSizeY = 48;
-    public float startX = -0.5f;
-    public float startY = -0.5f;
-    public float startZ;
+    private int gridSizeX;
+    private int gridSizeY;
+    private float startX;
+    private float startY;
+    private float endX;
+    private float endY;
+    private float startZ = 0f;
     public float smallStep = 1f;
     public float largeStep = 8f;
-    
+
     public Color mainColor = new Color(0f, 1f, 0f, 1f);
     public Color subColor = new Color(0f, 0.5f, 0f, 1f);
 
-    void CreateLineMaterial ()
-    {
-        if(!lineMaterial)
-        {
+    void CreateLineMaterial() {
+        if (!lineMaterial) {
             var shader = Shader.Find("Hidden/Internal-Colored");
             lineMaterial = new Material(shader);
 
             lineMaterial.hideFlags = HideFlags.HideAndDontSave;
-        
+
             // Turn on alpha blending
-            lineMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-            lineMaterial.SetInt("_DstBlent", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            lineMaterial.SetInt("_SrcBlend", (int) UnityEngine.Rendering.BlendMode.SrcAlpha);
+            lineMaterial.SetInt("_DstBlent", (int) UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
 
             // Turn off depth writing
             lineMaterial.SetInt("_ZWrite", 0);
 
             // Turn off backface culling
-            lineMaterial.SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
+            lineMaterial.SetInt("_Cull", (int) UnityEngine.Rendering.CullMode.Off);
         }
     }
 
-    private void OnDisable()
-    {
+    private void OnDisable() {
         DestroyImmediate(lineMaterial);
     }
 
-    private void OnPostRender()
-    {
+    private void OnPostRender() {
         CreateLineMaterial();
+        setGridDisplayOffset();
         lineMaterial.SetPass(0);
         GL.Begin(GL.LINES);
 
-        if(showSub)
-        {
+        if (showSub) {
             GL.Color(subColor);
 
-            for(float y = 0; y <= gridSizeY; y += smallStep)
-            {
+            for (float y = 0; y <= gridSizeY; y += smallStep) {
                 GL.Vertex3(startX, startY + y, startZ);
                 GL.Vertex3(startX + gridSizeX, startY + y, startZ);
             }
 
-            for(float x = 0; x <= gridSizeX; x += smallStep)
-            {
+            for (float x = 0; x <= gridSizeX; x += smallStep) {
                 GL.Vertex3(startX + x, startY, startZ);
                 GL.Vertex3(startX + x, startY + gridSizeY, startZ);
             }
         }
 
-        if(showMain)
-        {
+        if (showMain) {
             GL.Color(mainColor);
 
-            for(float y = 0; y <= gridSizeY; y += largeStep)
-            {
+            for (float y = 0; y <= gridSizeY; y += largeStep) {
                 GL.Vertex3(startX, startY + y, startZ);
                 GL.Vertex3(startX + gridSizeX, startY + y, startZ);
             }
 
-            for(float x = 0; x <= gridSizeX; x += largeStep)
-            {
+            for (float x = 0; x <= gridSizeX; x += largeStep) {
                 GL.Vertex3(startX + x, startY, startZ);
                 GL.Vertex3(startX + x, startY + gridSizeY, startZ);
             }
         }
 
         GL.End();
+    }
+
+    private void setGridDisplayOffset() {
+        startX = Game.xNoEdit - 0.5f;
+        startY = Game.yNoEdit - 0.5f;
+        gridSizeX = Game.gridSizeX;
+        gridSizeY = Game.gridSizeY;
+        endX = Game.toXNoEdit;
+        endY = Game.toYNoEdit;
     }
 }

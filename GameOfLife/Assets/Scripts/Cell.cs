@@ -2,22 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Cell : MonoBehaviour
-{
+public class Cell: MonoBehaviour {
     public bool isAlive = false;
     public int numNeighbors = 0;
 
-    public void SetAlive(bool alive)
-    {
+    public void SetAlive(bool alive) {
         isAlive = alive;
+        SetRender(alive);
+    }
 
-        if(alive)
-        {
-            GetComponent<SpriteRenderer>().enabled = true;
-        }
-        else
-        {
-            GetComponent<SpriteRenderer>().enabled = false;
-        }
+    private void SetRender(bool alive) {
+        GetComponent < SpriteRenderer > ().enabled = alive ? true : false;
     }
 }
