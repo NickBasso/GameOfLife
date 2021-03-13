@@ -6,8 +6,11 @@
 - Dead cell with 3 neighbors => lives;
 - Others => die or remain dead;
 
+#### `Before the game starts you can:`
+- Change the map and grid overlay size;
+- Change the small/big grid overlay section size;
+
 #### `During the game you have the following controls available:`
 - Press C to clear the entire map;
 - Press R to fill the entire map with random state cells;
 - Press P to Pause/Resume the game;
-- Click on cell to change its life status to the opposite (live/dead);
